@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/StockSim/StockSim.iml" filepath="$PROJECT_DIR$/StockSim/StockSim.iml" />
+      <module fileurl="file://$PROJECT_DIR$/StonksApi/StonksApi.iml" filepath="$PROJECT_DIR$/StonksApi/StonksApi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/StonksgeneratorV1.iml" filepath="$PROJECT_DIR$/StonksgeneratorV1.iml" />
+    </modules>
+  </component>
+</project>
