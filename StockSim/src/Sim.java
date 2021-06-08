@@ -6,7 +6,7 @@ public class Sim {
 
 
 
-    private void buystock(double closing)
+    private void buystock(double closing,Stockdepot aktie)
     {
         
     }

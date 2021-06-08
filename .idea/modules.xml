@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/StockSim/StockSim.iml" filepath="$PROJECT_DIR$/StockSim/StockSim.iml" />
       <module fileurl="file://$PROJECT_DIR$/StonksApi/StonksApi.iml" filepath="$PROJECT_DIR$/StonksApi/StonksApi.iml" />
       <module fileurl="file://$PROJECT_DIR$/StonksgeneratorV1.iml" filepath="$PROJECT_DIR$/StonksgeneratorV1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Tester/Tester.iml" filepath="$PROJECT_DIR$/Tester/Tester.iml" />
     </modules>
   </component>
 </project>

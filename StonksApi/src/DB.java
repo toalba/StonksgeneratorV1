@@ -9,8 +9,8 @@ import java.util.Properties;
 public class DB
 {
     private static Properties config = new Properties();
-    private static String hostname = "45.157.235.246";
-    private static String dbName =  "aktienapi";
+    private static String hostname = "localhost";
+    private static String dbName =  "aktien";
     private String dBPort = "3306";
     private static String userName = "root";
     private static String password = "wa22er!wasser";
@@ -18,7 +18,7 @@ public class DB
 
     static {
         try {
-            config.load(new FileInputStream("/home/toalba/Java2/StonksgeneratorV1/resource/config.properties"));
+            config.load(new FileInputStream("C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\resource\\config.properties"));
             System.out.println(hostname);
             con = DriverManager.getConnection("jdbc:mysql://"+hostname+"/"+dbName+"?user="+userName+"&password="+password);
         } catch (SQLException | FileNotFoundException throwables) {
@@ -52,7 +52,7 @@ public class DB
             con = DriverManager.getConnection("jdbc:mysql://"+hostname+"/"+dbName+"?user="+userName+"&password="+password);
             Statement stm = con.createStatement();
             PreparedStatement preparedStmt = con.prepareStatement(insertInTable);
-            preparedStmt.setDate(1, java.sql.Date.valueOf("2021-01-26"));
+            preparedStmt.setDate(1, java.sql.Date.valueOf(date));
             preparedStmt.executeQuery();
         }
         catch (SQLException e)
