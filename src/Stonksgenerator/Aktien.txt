@@ -1,0 +1,4 @@
+AMZN
+AAPL
+TSLA
+IBM
