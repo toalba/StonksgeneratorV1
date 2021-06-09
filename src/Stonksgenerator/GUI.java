@@ -11,6 +11,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Scanner;
 
 
@@ -24,7 +25,6 @@ public class GUI extends Application{
 
     @Override
     public void start(Stage s) throws IOException, JSONException, SQLException {
-        /*DB Klasse, WebRequest - Abfrage vom Symbol*/
 
         //trader.CreateSTM();
         readFile();
@@ -43,7 +43,7 @@ public class GUI extends Application{
                 trader.SelectAVGStatement(symbol);
                 trader.InsertStatementAvg(symbol);
                 trader.createTradingTable(symbol);
-                trader.fillDateTradeList(symbol);
+                trader.fillDateTradeList(symbol, LocalDate.now());
                 trader.trading200(symbol);
                 trader.buyandHold(symbol);
                 trader.trading200With3(symbol);
@@ -92,11 +92,14 @@ public class GUI extends Application{
                 try {
                     trader.selectAll(symbol);
                     trader.SelectAVGStatement(symbol);
-                    trader.fillDateTradeList(symbol);
+                    Thread.sleep(500);
+                    trader.fillDateTradeList(symbol,LocalDate.now().minusDays(1));
+                    Thread.sleep(500);
                     trader.trading200(symbol);
                     trader.buyandHold(symbol);
                     trader.trading200With3(symbol);
                     trader.ListNull();
+                    trader.startm=100000;
                 }catch (Exception e)
                 {
                     System.out.println(e.toString());

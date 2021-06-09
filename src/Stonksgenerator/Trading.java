@@ -363,7 +363,7 @@ public class Trading
         }
     }
 
-    public void fillDateTradeList(String symbol) {
+    public void fillDateTradeList(String symbol, LocalDate ende) {
         dateTradeList = new ArrayList<LocalDate>();
         closeTradeList = new ArrayList<Double>();
         averageTradeList = new ArrayList<Double>();
@@ -434,8 +434,7 @@ public class Trading
                         bought = 1;
                         count = 0;
                         insertTradeIntoDB(symbol,(LocalDate) dateTradeList.get(i),bought,endung, count, money);
-                        //System.out.println("sold");
-                        //System.out.println(depot + " money in depot");
+
                     }
                 }
                 if(dateTradeList.get(i) == dateTradeList.get(dateTradeList.size()-1))
@@ -518,14 +517,13 @@ public class Trading
                 bought= 1;
                 count = 0;
                 insertTradeIntoDB(symbol,(LocalDate) dateTradeList.get(i),bought,endung, count, money);
-                //System.out.println("sold");
-                //System.out.println(depot + " money in depot");
+
             }
         }
         System.out.println(symbol);
         money = (int) (money - startm);
-        System.out.println(money + " money in depot");
-        System.out.println(((money/startm)*100.00) + " prozentueller Gewinn");
+        System.out.println(money + " Geld aktuell");
+        System.out.println(((money/startm)*100.00) + "% Gewinn");
     }
     public void trading200With3(String symbol) throws SQLException {
         int bought = 0;
@@ -533,7 +531,7 @@ public class Trading
         int money = (int) startm;
         String endung = "trade3";
         insertStartTrade(symbol, endung);
-        System.out.println("Trading with _200 plus 3%");
+        System.out.println("Trading with 200er plus 3%");
         Connection conn = null;
         conn =  DriverManager.getConnection("jdbc:mysql://" + hostname + "/" + dbName + "?user=" + userName + "&password=" + password);
         for (int i = 0; i < dateTradeList.size(); i++) {
@@ -571,8 +569,7 @@ public class Trading
                         bought = 1;
                         count = 0;
                         insertTradeIntoDB(symbol,(LocalDate) dateTradeList.get(i), bought, endung, count, money);
-                        //System.out.println("sold");
-                        //System.out.println(depot + " money in depot");
+
                     }
                 }
                 if(dateTradeList.get(i) == dateTradeList.get(dateTradeList.size()-1)) {
@@ -592,7 +589,7 @@ public class Trading
         conn.close();
         System.out.println(symbol);
         money = (int) (money - startm);
-        System.out.println(money + " money in depot");
-        System.out.println(((money/startm)*100.00) + " prozentuelle VerÃ¤nderung");
+        System.out.println(money + " Geld aktuell");
+        System.out.println(((money/startm)*100.00) + "% Gewinn");
     }
 }
