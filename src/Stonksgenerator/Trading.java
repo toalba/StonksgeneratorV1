@@ -45,45 +45,8 @@ public class Trading
     private static String userName = "root";
     private static String password = "wa22er!wasser";
 
-    public JSONObject Request(String urlString)
-    {
 
 
-        HttpURLConnection con;
-        try
-        {
-            URL url = new URL(urlString);
-            con = (HttpURLConnection)url.openConnection();
-            con.setRequestMethod("GET");
-            con.setUseCaches(false);
-            con.setRequestProperty("Content-Type", "application/json; utf-8");
-            con.setRequestProperty("Accept", "application/json");
-            con.setDoOutput(true);
-
-            try(BufferedReader br = new BufferedReader((new InputStreamReader(con.getInputStream(),StandardCharsets.UTF_8))))
-            {
-                StringBuilder response = new StringBuilder();
-                String responseLine;
-                while((responseLine = br.readLine()) != null)
-                {
-                    response.append(responseLine.trim());
-                }
-                System.out.println(response.toString());
-                return new JSONObject(response.toString());
-            }
-        }catch (Exception e)
-        {
-            System.out.println("Der requestString kann entweder nicht gefunden werden, oder nicht geöffnet werden");
-            e.printStackTrace();
-        }
-        return null;
-    }
-    public String StringBuilder(String symbol)
-    {
-        String s = requestString+function+prefsymbol+symbol+key;
-
-        return s;
-    }
 
     public void GetCloseValues(String symbol) throws JSONException, IOException
     {
@@ -432,7 +395,7 @@ public class Trading
         int money=0;
         String endung = "trading";
         insertStartTrade(symbol,endung);
-        System.out.println("Trading with _200");
+        System.out.println("Trading with 200er");
         Connection con = null;
         con = DriverManager.getConnection("jdbc:mysql://" + hostname + "/" + dbName + "?user=" + userName + "&password=" + password);
         for (int i = 0; i < dateTradeList.size(); i++) {
@@ -494,8 +457,8 @@ public class Trading
         con.close();
         System.out.println(symbol);
         money = (int) (money - startm);
-        System.out.println(money + " money in depot");
-        System.out.println(((money/startm)*100.00) + " prozentueller Gewinn");
+        System.out.println(money + " Geld aktuell");
+        System.out.println(((money/startm)*100.00) + "% Gewinn");
     }
     public void insertTradeIntoDB (String symbol,LocalDate dateTrading, int bought, String end, int count, double money) throws SQLException
     {

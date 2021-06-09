@@ -91,6 +91,7 @@ public class GUI extends Application{
             else{
                 try {
                     trader.selectAll(symbol);
+                    trader.SelectAVGStatement(symbol);
                     trader.fillDateTradeList(symbol);
                     trader.trading200(symbol);
                     trader.buyandHold(symbol);
