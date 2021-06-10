@@ -33,10 +33,6 @@ public class Trading
     public static ArrayList<Double> splitCorrected = new ArrayList<>();
 
 
-    private final String key="&apikey=1AD6CE6LV8OFT02F";
-    private String requestString = "https://www.alphavantage.co/query?";
-    private String function = "function=TIME_SERIES_DAILY_ADJUSTED&";
-    private String prefsymbol = "&symbol=";
 
     public static Connection con;
     private static String hostname = "localhost";
@@ -313,7 +309,10 @@ public class Trading
     int count = 0;
     boolean bought = false;
     double startm = 100000;
-
+    public void startdate(LocalDate date)
+    {
+        currentdate=date;
+    }
 
     public void createTradingTable(String symbol){
 
@@ -367,9 +366,9 @@ public class Trading
         dateTradeList = new ArrayList<LocalDate>();
         closeTradeList = new ArrayList<Double>();
         averageTradeList = new ArrayList<Double>();
-        String sql = "select datum,close from " + symbol + " where datum between \'" + currentdate + "\' AND \'" + current.minusDays(1) + "\' ;";
+        String sql = "select datum,close from " + symbol + " where datum between \'" + currentdate + "\' AND \'" + ende + "\' ;";
         String sqlAvg = "select AVERAGE from " + symbol + "avg where datum between \'" + currentdate + "\' " +
-                "AND \'" + current.minusDays(1) + "\';";
+                "AND \'" + ende + "\';";
 
         try {
             con = DriverManager.getConnection("jdbc:mysql://" + hostname + "/" + dbName + "?user=" + userName + "&password=" + password);
@@ -408,8 +407,10 @@ public class Trading
                     bought = rs.getInt("bought");
                     count = rs.getInt("count");
                     money = rs.getInt("money");
+                   // System.out.println(bought+" "+count+" "+money);
                 }
             } catch (SQLException ex) {
+                System.out.println("Hier");
                 System.out.println(ex.getMessage());
             }
             if (bought == 1) {

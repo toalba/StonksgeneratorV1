@@ -90,6 +90,7 @@ public class GUI extends Application{
             }
             else{
                 try {
+                    trader.startdate(LocalDate.of(2019,01,01));
                     trader.selectAll(symbol);
                     trader.SelectAVGStatement(symbol);
                     Thread.sleep(500);
