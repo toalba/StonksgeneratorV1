@@ -10,8 +10,11 @@ import org.json.JSONException;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Array;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Scanner;
 
 
@@ -131,6 +134,84 @@ public class GUI extends Application{
             e.printStackTrace();
         }
     }
+    public void drawaktienverlauf(ArrayList<String> symbols)
+    {
+        Stage s = new Stage();
+
+        try {
+            final CategoryAxis xAxis = new CategoryAxis();
+            final NumberAxis yAxis = new NumberAxis();
+            yAxis.setAutoRanging(false);
+            ArrayList<Double> up = new ArrayList<Double>();
+            ArrayList<Double> low = new ArrayList<Double>();
+            for (String symbol:symbols) {
+                up.add(trader.getUpperBound(symbol));
+                low.add(trader.getLowerBound(symbol));
+            }
+            Collections.sort(up);
+            Collections.sort(low);
+            yAxis.setLowerBound(low.get(0));
+            yAxis.setUpperBound(up.get(up.size()-1));
+
+
+            xAxis.setLabel("date");
+            yAxis.setLabel("close-value");
+            final LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
+            lineChart.setTitle("Tradingsimulation");
+            for (String symbol:symbols)
+            {
+                ArrayList<Tradetable> tradetables= trader.getTradetablebysymbol(symbol,"trading");
+                XYChart.Series<String, Number> closeStat = new XYChart.Series();
+            }
+            XYChart.Series<String, Number> closeStat = new XYChart.Series();
+            closeStat.setName("close-value");
+            for (int k = 0; k < trader.arrayListClose.size(); k++) {
+                closeStat.getData().add(new XYChart.Data(trader.dateDB.get(k), trader.closeDB.get(k)));
+            }
+            XYChart.Series<String, Number> averageStat = new XYChart.Series();
+            XYChart.Series<String, Number> buyandsell = new XYChart.Series();
+            buyandsell.setName("kauf/verkauf");
+            averageStat.setName("moving average");
+            for (int j = 1; j < trader.arrayListAVG.size() - 1; j++) {
+                averageStat.getData().add(new XYChart.Data(trader.dateDB.get(j), trader.avgDB.get(j)));
+                buyandsell.getData().add(new XYChart.Data(trader.dateDB.get(j), trader.averageTradeList.get(j)));
+            }
+
+
+            Scene scene = new Scene(lineChart, 1080, 720);
+            lineChart.getData().add(closeStat);
+            lineChart.getData().add(averageStat);
+            lineChart.getData().add(buyandsell);
+
+            lineChart.setCreateSymbols(false);
+            s.setScene(scene);
+            s.show();
+            saveAsPng(lineChart, "/home/toalba/Java2/StonksgeneratorV1/src/Stonksgenerator/img/chart-" + symbol +  "-stocks"+art+".png");
+            s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void tradingseries() throws FileNotFoundException, SQLException, InterruptedException {
+        readFile();
+        int a = stonks.size();
+        int money = 10000;
+        for (String symbol:stonks) {
+            Trading tr = new Trading();
+            tr.droptradingtabelsbySymbol(symbol);
+            tr.startm=money/a;
+            tr.startdate(LocalDate.of(2016,1,1));
+            tr.selectAll(symbol);
+            tr.SelectAVGStatement(symbol);
+            trader.fillDateTradeList(symbol,LocalDate.now().minusDays(1));
+            Thread.sleep(500);
+            tr.trading200(symbol);
+            trader.ListNull();
+        }
+
+    }
+
     public static void main(String args[]){
         launch(args);
     }

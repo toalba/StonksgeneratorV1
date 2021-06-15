@@ -10,6 +10,8 @@ import java.sql.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+
 import org.json.*;
 import org.apache.commons.io.IOUtils;
 
@@ -129,6 +131,25 @@ public class Trading
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+    }
+    public  void droptradingtabelsbySymbol(String symbol)
+    {
+        String dropTabletrading = "DROP TABLE IF EXISTS " + symbol+"trading";
+        String dropTabletrade3 = "DROP TABLE IF EXISTS " + symbol+"trade3";
+        String dropTablebh = "DROP TABLE IF EXISTS " + symbol+"bh";
+        try
+        {
+            con = DriverManager.getConnection("jdbc:mysql://"+hostname+"/"+dbName+"?user="+userName+"&password="+password);
+            Statement stm = con.createStatement();
+            stm.execute(dropTabletrading);
+            stm.execute(dropTabletrade3);
+            stm.execute(dropTablebh);
+        }
+        catch (SQLException e)
+        {
+            System.out.println("db ERROR");
+            e.printStackTrace();
         }
     }
     // Select Statement weiterschreiben
@@ -592,5 +613,28 @@ public class Trading
         money = (int) (money - startm);
         System.out.println(money + " Geld aktuell");
         System.out.println(((money/startm)*100.00) + "% Gewinn");
+    }
+    public ArrayList<Tradetable> getTradetablebysymbol(String symbol,String art) throws SQLException {
+        Connection conn = null;
+        conn =  DriverManager.getConnection("jdbc:mysql://" + hostname + "/" + dbName + "?user=" + userName + "&password=" + password);
+        String sqlFlag = "select * from " + symbol + art+" order by currentDate desc limit 1";
+        ArrayList<Tradetable> artr = new ArrayList<>();
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sqlFlag);
+
+            while (rs.next()) {
+                Tradetable tradetable = new Tradetable();
+                tradetable.bought = rs.getInt("bought");
+                tradetable.count = rs.getInt("count");
+                tradetable.money = rs.getInt("money");
+                artr.add(tradetable);
+            }
+            conn.close();
+            return artr;
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return artr;
     }
 }
