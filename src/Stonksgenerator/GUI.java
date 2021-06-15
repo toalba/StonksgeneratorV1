@@ -13,13 +13,10 @@ import java.io.IOException;
 import java.sql.Array;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
 
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 
 
 public class GUI extends Application{
@@ -27,10 +24,12 @@ public class GUI extends Application{
     ArrayList<String> stonks = new ArrayList<String>();
 
     @Override
-    public void start(Stage s) throws IOException, JSONException, SQLException {
+    public void start(Stage s) throws IOException, JSONException, SQLException, InterruptedException {
 
         //trader.CreateSTM();
         readFile();
+        //tradingseries();
+        //drawaktienverlauf(stonks);
         for(int i = 0; i<stonks.size();i++) {
             String symbol = stonks.get(i);
             System.out.println(symbol);
@@ -85,7 +84,7 @@ public class GUI extends Application{
                     lineChart.setCreateSymbols(false);
                     s.setScene(scene);
                     s.show();
-                    saveAsPng(lineChart, "/home/toalba/Java2/StonksgeneratorV1/src/Stonksgenerator/img/chart-" + symbol +  "-stocks.png");
+                    saveAsPng(lineChart, "C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\src\\Stonksgenerator/img/chart-" + symbol +  "-stocks.png");
                     s.close();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -111,10 +110,11 @@ public class GUI extends Application{
 
             }
         }
+       drawaktienverlauf(stonks);
     }
     void readFile() throws FileNotFoundException
     {
-        Scanner reader = new Scanner(new File ("/home/toalba/Java2/StonksgeneratorV1/src/Stonksgenerator/Aktien.txt"));
+        Scanner reader = new Scanner(new File ("C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\src\\Stonksgenerator\\Aktien.txt"));
         while(reader.hasNextLine())
         {
             stonks.add(reader.nextLine());
@@ -122,7 +122,7 @@ public class GUI extends Application{
     }
     public static boolean check (String symbol)
     {
-        File file = new File ("/home/toalba/Java2/StonksgeneratorV1/src/Stonksgenerator/img/chart-" + symbol +  "-stocks.png");
+        File file = new File ("C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\src\\Stonksgenerator/img/chart-" + symbol +  "-stocks.png");
         return file.exists();
     }
     public void saveAsPng(LineChart lineChart, String path) {
@@ -141,73 +141,59 @@ public class GUI extends Application{
         try {
             final CategoryAxis xAxis = new CategoryAxis();
             final NumberAxis yAxis = new NumberAxis();
-            yAxis.setAutoRanging(false);
-            ArrayList<Double> up = new ArrayList<Double>();
-            ArrayList<Double> low = new ArrayList<Double>();
-            for (String symbol:symbols) {
-                up.add(trader.getUpperBound(symbol));
-                low.add(trader.getLowerBound(symbol));
-            }
-            Collections.sort(up);
-            Collections.sort(low);
-            yAxis.setLowerBound(low.get(0));
-            yAxis.setUpperBound(up.get(up.size()-1));
-
-
+            final NumberAxis yAxis2 = new NumberAxis();
             xAxis.setLabel("date");
-            yAxis.setLabel("close-value");
+            yAxis.setLabel("count");
+            yAxis2.setLabel("money");
             final LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
-            lineChart.setTitle("Tradingsimulation");
-            for (String symbol:symbols)
-            {
+            final LineChart<String, Number> lineChart2 = new LineChart<String, Number>(xAxis, yAxis2);
+            lineChart.setTitle("Tradingsimulation - Aktien");
+            lineChart2.setTitle("Tradingsimulation - Money");
+            for (String symbol:symbols) {
+                XYChart.Series<String, Number> tradecountStat = new XYChart.Series();
+                XYChart.Series<String, Number> trademoneyStat = new XYChart.Series();
                 ArrayList<Tradetable> tradetables= trader.getTradetablebysymbol(symbol,"trading");
-                XYChart.Series<String, Number> closeStat = new XYChart.Series();
+                tradecountStat.setName(symbol);
+                trademoneyStat.setName(symbol);
+                for (Tradetable tradetable:tradetables) {
+                    tradecountStat.getData().add(new XYChart.Data(tradetable.date,tradetable.count));
+                    trademoneyStat.getData().add(new XYChart.Data(tradetable.date,tradetable.money));
+                }
+                lineChart.getData().add(tradecountStat);
+                lineChart2.getData().add(trademoneyStat);
             }
-            XYChart.Series<String, Number> closeStat = new XYChart.Series();
-            closeStat.setName("close-value");
-            for (int k = 0; k < trader.arrayListClose.size(); k++) {
-                closeStat.getData().add(new XYChart.Data(trader.dateDB.get(k), trader.closeDB.get(k)));
-            }
-            XYChart.Series<String, Number> averageStat = new XYChart.Series();
-            XYChart.Series<String, Number> buyandsell = new XYChart.Series();
-            buyandsell.setName("kauf/verkauf");
-            averageStat.setName("moving average");
-            for (int j = 1; j < trader.arrayListAVG.size() - 1; j++) {
-                averageStat.getData().add(new XYChart.Data(trader.dateDB.get(j), trader.avgDB.get(j)));
-                buyandsell.getData().add(new XYChart.Data(trader.dateDB.get(j), trader.averageTradeList.get(j)));
-            }
-
-
             Scene scene = new Scene(lineChart, 1080, 720);
-            lineChart.getData().add(closeStat);
-            lineChart.getData().add(averageStat);
-            lineChart.getData().add(buyandsell);
-
+            Scene scene1 = new Scene(lineChart2, 1080, 720);
             lineChart.setCreateSymbols(false);
             s.setScene(scene);
             s.show();
-            saveAsPng(lineChart, "/home/toalba/Java2/StonksgeneratorV1/src/Stonksgenerator/img/chart-" + symbol +  "-stocks"+art+".png");
+            Thread.sleep(100);
+            saveAsPng(lineChart, "C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\src\\Stonksgenerator/img/chart-" + LocalDate.now() +"-trading-count.png");
+            s.setScene(scene1);
+            s.show();
+            Thread.sleep(100);
+            saveAsPng(lineChart2, "C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\src\\Stonksgenerator/img/chart-" + LocalDate.now() +  "-trading-money.png");
             s.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
+
     public void tradingseries() throws FileNotFoundException, SQLException, InterruptedException {
-        readFile();
         int a = stonks.size();
-        int money = 10000;
+        int money = 100000;
         for (String symbol:stonks) {
             Trading tr = new Trading();
             tr.droptradingtabelsbySymbol(symbol);
+            tr.createTradingTable(symbol);
             tr.startm=money/a;
             tr.startdate(LocalDate.of(2016,1,1));
-            tr.selectAll(symbol);
-            tr.SelectAVGStatement(symbol);
-            trader.fillDateTradeList(symbol,LocalDate.now().minusDays(1));
+            tr.split(symbol);
+            tr.fillDateTradeList(symbol,LocalDate.now().minusDays(1));
             Thread.sleep(500);
             tr.trading200(symbol);
-            trader.ListNull();
+            tr.ListNull();
         }
 
     }

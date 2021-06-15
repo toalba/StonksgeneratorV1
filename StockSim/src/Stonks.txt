@@ -1,5 +1,0 @@
-AMZN
-AAPL
-TSLA
-IBM
-ADM

@@ -1,2 +1,5 @@
 TSLA
 IBM
+AMZN
+AAPL
+ADM

@@ -86,6 +86,7 @@ public class Trading
             con = DriverManager.getConnection("jdbc:mysql://"+hostname+"/"+dbName+"?user="+userName+"&password="+password);
             Statement stm = con.createStatement();
             stm.execute(useDatabase);
+            con.close();
         }
         catch (SQLException e)
         {
@@ -112,6 +113,7 @@ public class Trading
             stm.execute(createTableavg);
             stm.execute(dropTableC);
             stm.execute(cmdC);
+            con.close();
         }
         catch (SQLException e)
         {
@@ -129,6 +131,7 @@ public class Trading
                 sql = "insert into " + symbol + " (datum , close) VALUES(\""+ arrayListDate.get(i).toString()+"\","+ arrayListClose.get(i)+");";
                 pstmt.execute(sql);
             }
+            con.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -145,6 +148,7 @@ public class Trading
             stm.execute(dropTabletrading);
             stm.execute(dropTabletrade3);
             stm.execute(dropTablebh);
+            con.close();
         }
         catch (SQLException e)
         {
@@ -170,7 +174,7 @@ public class Trading
                     }
                 }
             }
-
+            con.close();
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -189,6 +193,7 @@ public class Trading
                 insertInTableAVG = "insert into " +symbol+ "avg (datum, AVERAGE) values (\"" + arrayListDate.get(i).toString() + "\"," + arrayListAVG.get(i) + ");";
                 stm.execute(insertInTableAVG);
             }
+            con.close();
         }
         catch (SQLException e)
         {
@@ -218,6 +223,7 @@ public class Trading
                 avgDB.add(avgTemp == 0 ? null : avgTemp);
             }
             dateDB.sort(null);
+            con.close();
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -233,6 +239,7 @@ public class Trading
             while(rsmin.next()){
                 min = rsmin.getDouble(1);
             }
+            con.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -282,6 +289,7 @@ public class Trading
                         arrayListClose.get(i) + "," + splitList.get(i) + ");";
                 pstm.execute(sqlI);
             }
+            con.close();
         }catch (SQLException e){
             e.printStackTrace();
         }
@@ -308,6 +316,7 @@ public class Trading
                 splitCorrected.add(arrayListClose.get(i) / div);
                 div = div * splitList.get(i);
             }
+            con.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -322,10 +331,12 @@ public class Trading
                 cmd = "UPDATE "+ symbol + " SET close = " + splitCorrected.get(i) + " WHERE datum = \"" + arrayListDate.get(i).toString() + "\";";
                 stm.execute(cmd);
             }
+            con.close();
         }catch (Exception e){
             e.printStackTrace();
         }
     }
+
     private LocalDate currentdate = LocalDate.of(2010, 1, 1);
     int count = 0;
     boolean bought = false;
@@ -349,6 +360,7 @@ public class Trading
             stm.execute(cmdC);
             stm.execute(cmdD);
             stm.execute(cmd3);
+            con.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -383,6 +395,7 @@ public class Trading
         }
     }
 
+
     public void fillDateTradeList(String symbol, LocalDate ende) {
         dateTradeList = new ArrayList<LocalDate>();
         closeTradeList = new ArrayList<Double>();
@@ -405,6 +418,7 @@ public class Trading
                 closeTradeList.add(rs.getDouble("close"));
                 averageTradeList.add(rsA.getDouble("average"));
             }
+            con.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -617,7 +631,7 @@ public class Trading
     public ArrayList<Tradetable> getTradetablebysymbol(String symbol,String art) throws SQLException {
         Connection conn = null;
         conn =  DriverManager.getConnection("jdbc:mysql://" + hostname + "/" + dbName + "?user=" + userName + "&password=" + password);
-        String sqlFlag = "select * from " + symbol + art+" order by currentDate desc limit 1";
+        String sqlFlag = "select * from " + symbol + art+" order by currentDate";
         ArrayList<Tradetable> artr = new ArrayList<>();
         try {
             Statement stmt = conn.createStatement();
@@ -628,6 +642,7 @@ public class Trading
                 tradetable.bought = rs.getInt("bought");
                 tradetable.count = rs.getInt("count");
                 tradetable.money = rs.getInt("money");
+                tradetable.date = rs.getString("currentDate");
                 artr.add(tradetable);
             }
             conn.close();
