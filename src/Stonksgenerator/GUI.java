@@ -149,13 +149,15 @@ public class GUI extends Application{
 
         try {
             final CategoryAxis xAxis = new CategoryAxis();
+            final CategoryAxis xAxis2 = new CategoryAxis();
             final NumberAxis yAxis = new NumberAxis();
             final NumberAxis yAxis2 = new NumberAxis();
             xAxis.setLabel("date");
+            xAxis2.setLabel("date");
             yAxis.setLabel("count");
             yAxis2.setLabel("money");
             final LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
-            final LineChart<String, Number> lineChart2 = new LineChart<String, Number>(xAxis, yAxis2);
+            final LineChart<String, Number> lineChart2 = new LineChart<String, Number>(xAxis2, yAxis2);
             lineChart.setTitle("Tradingsimulation - Aktien");
             lineChart2.setTitle("Tradingsimulation - Money");
             for (String symbol:symbols) {
@@ -176,11 +178,11 @@ public class GUI extends Application{
             lineChart.setCreateSymbols(false);
             s.setScene(scene);
             s.show();
-            Thread.sleep(100);
+            Thread.sleep(1000);
             saveAsPng(lineChart, "src\\Stonksgenerator/img/chart-" + LocalDate.now() +"-trading-count.png");
             s.setScene(scene1);
             s.show();
-            Thread.sleep(100);
+            Thread.sleep(1000);
             saveAsPng(lineChart2, "src\\Stonksgenerator/img/chart-" + LocalDate.now() +  "-trading-money.png");
             s.close();
 
