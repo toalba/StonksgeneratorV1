@@ -5,12 +5,20 @@ import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.chart.*;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.scene.web.WebView;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.json.JSONException;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Array;
+
+import java.net.MalformedURLException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
@@ -28,9 +36,10 @@ public class GUI extends Application{
 
         //trader.CreateSTM();
         readFile();
-        //tradingseries();
-        //drawaktienverlauf(stonks);
-        for(int i = 0; i<stonks.size();i++) {
+        tradingseries();
+        drawaktienverlauf(stonks);
+        endtheme();
+        /*for(int i = 0; i<stonks.size();i++) {
             String symbol = stonks.get(i);
             System.out.println(symbol);
             if (!check(symbol)) {
@@ -110,11 +119,11 @@ public class GUI extends Application{
 
             }
         }
-       drawaktienverlauf(stonks);
+       drawaktienverlauf(stonks);*/
     }
     void readFile() throws FileNotFoundException
     {
-        Scanner reader = new Scanner(new File ("C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\src\\Stonksgenerator\\Aktien.txt"));
+        Scanner reader = new Scanner(new File ("src\\Stonksgenerator\\Aktien.txt"));
         while(reader.hasNextLine())
         {
             stonks.add(reader.nextLine());
@@ -122,7 +131,7 @@ public class GUI extends Application{
     }
     public static boolean check (String symbol)
     {
-        File file = new File ("C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\src\\Stonksgenerator/img/chart-" + symbol +  "-stocks.png");
+        File file = new File ("src\\Stonksgenerator/img/chart-" + symbol +  "-stocks.png");
         return file.exists();
     }
     public void saveAsPng(LineChart lineChart, String path) {
@@ -168,12 +177,13 @@ public class GUI extends Application{
             s.setScene(scene);
             s.show();
             Thread.sleep(100);
-            saveAsPng(lineChart, "C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\src\\Stonksgenerator/img/chart-" + LocalDate.now() +"-trading-count.png");
+            saveAsPng(lineChart, "src\\Stonksgenerator/img/chart-" + LocalDate.now() +"-trading-count.png");
             s.setScene(scene1);
             s.show();
             Thread.sleep(100);
-            saveAsPng(lineChart2, "C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\src\\Stonksgenerator/img/chart-" + LocalDate.now() +  "-trading-money.png");
+            saveAsPng(lineChart2, "src\\Stonksgenerator/img/chart-" + LocalDate.now() +  "-trading-money.png");
             s.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -197,7 +207,17 @@ public class GUI extends Application{
         }
 
     }
+    public void endtheme() throws MalformedURLException {
+        Stage stage = new Stage();
+        WebView webview = new WebView();
+        webview.getEngine().load(
+                "https://streamable.com/e/7fo13u?autoplay=1"
+        );
+        webview.setPrefSize(Screen.getPrimary().getBounds().getMaxX(), Screen.getPrimary().getBounds().getMaxY());
 
+        stage.setScene(new Scene(webview));
+        stage.show();
+    }
     public static void main(String args[]){
         launch(args);
     }
