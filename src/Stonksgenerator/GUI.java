@@ -34,92 +34,17 @@ public class GUI extends Application{
     @Override
     public void start(Stage s) throws IOException, JSONException, SQLException, InterruptedException {
 
-        //trader.CreateSTM();
         readFile();
-        tradingseries();
-        drawaktienverlauf(stonks);
-        endtheme();
-        /*for(int i = 0; i<stonks.size();i++) {
+        for(int i = 0; i<stonks.size();i++) {
             String symbol = stonks.get(i);
             System.out.println(symbol);
             if (!check(symbol)) {
-                trader.GetCloseValues(symbol);
-                trader.UseSTM();
-                trader.CreateTable(symbol);
-                trader.InsertStatementClose(symbol);
-                trader.getSplit(symbol);
-                trader.selectInsertSplit(symbol);
-                trader.split(symbol);
-                trader.update(symbol);
-                trader.SelectAVGStatement(symbol);
-                trader.InsertStatementAvg(symbol);
-                trader.createTradingTable(symbol);
-                trader.fillDateTradeList(symbol, LocalDate.now());
-                trader.trading200(symbol);
-                trader.buyandHold(symbol);
-                trader.trading200With3(symbol);
-                trader.ListNull();
-                trader.selectAll(symbol);
-
-                // JAVAFX:
-                try {
-                    final CategoryAxis xAxis = new CategoryAxis();
-                    final NumberAxis yAxis = new NumberAxis();
-                    yAxis.setAutoRanging(false);
-
-
-                    yAxis.setLowerBound(trader.getLowerBound(symbol));
-                    yAxis.setUpperBound(trader.getUpperBound(symbol));
-
-                    xAxis.setLabel("date");
-                    yAxis.setLabel("close-value");
-                    final LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
-                    lineChart.setTitle("stock-price " + symbol);
-                    XYChart.Series<String, Number> closeStat = new XYChart.Series();
-                    closeStat.setName("close-value");
-                    for (int k = 0; k < trader.arrayListClose.size(); k++) {
-                        closeStat.getData().add(new XYChart.Data(trader.dateDB.get(k), trader.closeDB.get(k)));
-                    }
-                    XYChart.Series<String, Number> averageStat = new XYChart.Series();
-                    averageStat.setName("moving average");
-                    for (int j = 1; j < trader.arrayListAVG.size() - 1; j++) {
-                        averageStat.getData().add(new XYChart.Data(trader.dateDB.get(j), trader.avgDB.get(j)));
-                    }
-
-                    Scene scene = new Scene(lineChart, 1080, 720);
-                    lineChart.getData().add(closeStat);
-                    lineChart.getData().add(averageStat);
-
-                    lineChart.setCreateSymbols(false);
-                    s.setScene(scene);
-                    s.show();
-                    saveAsPng(lineChart, "C:\\Users\\toalba\\Desktop\\schule\\StonksgeneratorV1\\src\\Stonksgenerator/img/chart-" + symbol +  "-stocks.png");
-                    s.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            else{
-                try {
-                    trader.startdate(LocalDate.of(2019,01,01));
-                    trader.selectAll(symbol);
-                    trader.SelectAVGStatement(symbol);
-                    Thread.sleep(500);
-                    trader.fillDateTradeList(symbol,LocalDate.now().minusDays(1));
-                    Thread.sleep(500);
-                    trader.trading200(symbol);
-                    trader.buyandHold(symbol);
-                    trader.trading200With3(symbol);
-                    trader.ListNull();
-                    trader.startm=100000;
-                }catch (Exception e)
-                {
-                    System.out.println(e.toString());
-                }
-
+                insertnewstock(symbol);
             }
         }
-       drawaktienverlauf(stonks);*/
+        tradingseries();
+        drawaktienverlauf(stonks);
+        endtheme();
     }
     void readFile() throws FileNotFoundException
     {
@@ -164,7 +89,6 @@ public class GUI extends Application{
                 XYChart.Series<String, Number> tradecountStat = new XYChart.Series();
                 XYChart.Series<String, Number> trademoneyStat = new XYChart.Series();
                 ArrayList<Tradetable> tradetables= trader.getTradetablebysymbol(symbol,"trading");
-                tradecountStat.setName(symbol);
                 trademoneyStat.setName(symbol);
                 for (Tradetable tradetable:tradetables) {
                     tradecountStat.getData().add(new XYChart.Data(tradetable.date,tradetable.count));
@@ -219,6 +143,65 @@ public class GUI extends Application{
 
         stage.setScene(new Scene(webview));
         stage.show();
+    }
+
+    public void insertnewstock(String symbol) throws SQLException, JSONException, IOException {
+        trader.GetCloseValues(symbol);
+        trader.UseSTM();
+        trader.CreateTable(symbol);
+        trader.InsertStatementClose(symbol);
+        trader.getSplit(symbol);
+        trader.selectInsertSplit(symbol);
+        trader.split(symbol);
+        trader.update(symbol);
+        trader.SelectAVGStatement(symbol);
+        trader.InsertStatementAvg(symbol);
+        trader.createTradingTable(symbol);
+        trader.fillDateTradeList(symbol, LocalDate.now());
+        trader.trading200(symbol);
+        trader.buyandHold(symbol);
+        trader.trading200With3(symbol);
+        trader.ListNull();
+        trader.selectAll(symbol);
+
+        // JAVAFX:
+        try {
+            Stage s = new Stage();
+            final CategoryAxis xAxis = new CategoryAxis();
+            final NumberAxis yAxis = new NumberAxis();
+            yAxis.setAutoRanging(false);
+
+            yAxis.setLowerBound(trader.getLowerBound(symbol));
+            yAxis.setUpperBound(trader.getUpperBound(symbol));
+
+            xAxis.setLabel("date");
+            yAxis.setLabel("close-value");
+            final LineChart<String, Number> lineChart = new LineChart<String, Number>(xAxis, yAxis);
+            lineChart.setTitle("stock-price " + symbol);
+            XYChart.Series<String, Number> closeStat = new XYChart.Series();
+            closeStat.setName("close-value");
+            for (int k = 0; k < trader.arrayListClose.size(); k++) {
+                closeStat.getData().add(new XYChart.Data(trader.dateDB.get(k), trader.closeDB.get(k)));
+            }
+            XYChart.Series<String, Number> averageStat = new XYChart.Series();
+            averageStat.setName("moving average");
+            for (int j = 1; j < trader.arrayListAVG.size() - 1; j++) {
+                averageStat.getData().add(new XYChart.Data(trader.dateDB.get(j), trader.avgDB.get(j)));
+            }
+
+            Scene scene = new Scene(lineChart, 720, 480);
+            lineChart.getData().add(closeStat);
+            lineChart.getData().add(averageStat);
+
+            lineChart.setCreateSymbols(false);
+            s.setScene(scene);
+            s.show();
+            Thread.sleep(5000);
+           saveAsPng(lineChart, "src\\Stonksgenerator/img/chart-" + symbol +  "-stocks.png");
+           s.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public static void main(String args[]){
         launch(args);
