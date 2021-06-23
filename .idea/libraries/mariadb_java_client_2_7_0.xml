@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="mariadb-java-client-2.7.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/Stonksgenerator/lib/mariadb-java-client-2.7.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/Stonksgenerator/lib/commons-io-2.9.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/Stonksgenerator/lib/java-json.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/src" />
+      <root url="jar://$PROJECT_DIR$/src/Stonksgenerator/lib/java-json.jar!/" />
+    </SOURCES>
+  </library>
+</component>

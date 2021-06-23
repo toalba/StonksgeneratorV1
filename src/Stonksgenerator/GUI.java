@@ -30,25 +30,50 @@ import java.io.FileNotFoundException;
 public class GUI extends Application{
     Trading trader = new Trading();
     ArrayList<String> stonks = new ArrayList<String>();
+    ArrayList<String> arten = new ArrayList<>();
 
     @Override
     public void start(Stage s) throws IOException, JSONException, SQLException, InterruptedException {
-
+        arten.add("_203");
+        arten.add("_200");
         readFile();
-        for(int i = 0; i<stonks.size();i++) {
+        /*for(int i = 0; i<stonks.size();i++) {
             String symbol = stonks.get(i);
             System.out.println(symbol);
             if (!check(symbol)) {
                 insertnewstock(symbol);
             }
+        }*/
+        bigfatunicornengine();
+    }
+    public void bigfatunicornengine() throws InterruptedException {
+        for (String art:arten) {
+            for (String symol:stonks) {
+                Simulation sim = new Simulation();
+                sim.startdate=LocalDate.of(2010,01,01);
+                sim.enddate=LocalDate.now();
+                sim.fillbank(20000);
+                sim.symbol_=symol;
+                if(art=="_200")
+                {
+                    sim.trading200();
+                }
+                else if(art=="_203")
+                {
+                    sim.trading203();
+                }
+                //sim.printgraf();
+                //Thread.sleep(1000);
+            }
         }
-        tradingseries();
-        drawaktienverlauf(stonks);
-        endtheme();
+
+        TheGreateown theGreateown = new TheGreateown();
+        theGreateown.printgraf(stonks,arten);
+
     }
     void readFile() throws FileNotFoundException
     {
-        Scanner reader = new Scanner(new File ("src\\Stonksgenerator\\Aktien.txt"));
+        Scanner reader = new Scanner(new File ("src/Stonksgenerator/Aktien.txt"));
         while(reader.hasNextLine())
         {
             stonks.add(reader.nextLine());
@@ -59,7 +84,7 @@ public class GUI extends Application{
         File file = new File ("src\\Stonksgenerator/img/chart-" + symbol +  "-stocks.png");
         return file.exists();
     }
-    public void saveAsPng(LineChart lineChart, String path) {
+    public static void saveAsPng(LineChart lineChart, String path) {
         WritableImage image = lineChart.snapshot(new SnapshotParameters(), null);
         File file = new File(path);
         try {
